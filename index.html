@@ -6,15 +6,25 @@
 <body>
     <h1>ChatGPT for Kindle</h1>
     <div>
-        <label for="userInput">Your Message:</label>
-        <input type="text" id="userInput">
-        <button onclick="sendMessage()">Send</button>
+        <label for="userInput">Your Message (type ~ to send):</label>
+        <input type="text" id="userInput" onkeyup="checkForSend(event)">
     </div>
     <div id="chatBox"></div>
 
     <script>
+        function checkForSend(event) {
+            if (event.key === "~") {
+                sendMessage();
+            }
+        }
+
         async function sendMessage() {
-            const userInput = document.getElementById('userInput').value;
+            const userInputElem = document.getElementById('userInput');
+            let userInput = userInputElem.value;
+            
+            // Remove the tilde (~)
+            userInput = userInput.replace("~", "");
+            
             const chatBox = document.getElementById('chatBox');
             
             // Display user's message
@@ -36,10 +46,10 @@
             const data = await response.json();
             
             // Display GPT-3's message
-            chatBox.innerHTML += `<div>ChatGPT: ${data.choices[0].text}</div>`;
+            chatBox.innerHTML += `<div>ChatGPT: ${data.choices[0].text.trim()}</div>`;
             
             // Clear the input field
-            document.getElementById('userInput').value = '';
+            userInputElem.value = '';
         }
     </script>
 </body>
